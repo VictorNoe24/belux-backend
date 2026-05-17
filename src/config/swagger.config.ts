@@ -7,7 +7,6 @@ export function setupSwagger(app: INestApplication): void {
     .setDescription('Belux Backend Documentation')
     .setVersion('1.0.0')
 
-    // JWT
     .addBearerAuth(
       {
         type: 'http',
