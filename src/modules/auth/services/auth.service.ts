@@ -1,9 +1,11 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 
 import { JwtService } from '@nestjs/jwt';
 
 import * as bcrypt from 'bcrypt';
 
+import { ERROR_CODE } from '../../../common/constants/error-code.constant';
+import { AppException } from '../../../common/exceptions/app.exception';
 import { LoginDto } from '../dto/login.dto';
 import { AuthenticatedUser } from '../interfaces/authenticated-user.interface';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
@@ -21,13 +23,21 @@ export class AuthService {
     const user = await this.usersService.findByEmail(loginDto.email);
 
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new AppException({
+        message: 'Invalid credentials',
+        statusCode: HttpStatus.UNAUTHORIZED,
+        code: ERROR_CODE.AUTH_INVALID_CREDENTIALS,
+      });
     }
 
     const isPasswordValid = await bcrypt.compare(loginDto.password, user.password);
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new AppException({
+        message: 'Invalid credentials',
+        statusCode: HttpStatus.UNAUTHORIZED,
+        code: ERROR_CODE.AUTH_INVALID_CREDENTIALS,
+      });
     }
 
     const payload: JwtPayload = {

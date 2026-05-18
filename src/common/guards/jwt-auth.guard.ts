@@ -1,6 +1,8 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import { CanActivate, ExecutionContext, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
+import { ERROR_CODE } from '../constants/error-code.constant';
+import { AppException } from '../exceptions/app.exception';
 import { UsersService } from '../../modules/users/services/users.service';
 import { AuthenticatedUser } from '../../modules/auth/interfaces/authenticated-user.interface';
 import { JwtPayload } from '../../modules/auth/interfaces/jwt-payload.interface';
@@ -20,7 +22,11 @@ export class JwtAuthGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request.headers.authorization);
 
     if (!token) {
-      throw new UnauthorizedException('Authentication token is required');
+      throw new AppException({
+        message: 'Authentication token is required',
+        statusCode: HttpStatus.UNAUTHORIZED,
+        code: ERROR_CODE.AUTH_TOKEN_REQUIRED,
+      });
     }
 
     try {
@@ -28,7 +34,11 @@ export class JwtAuthGuard implements CanActivate {
       const user = await this.usersService.findById(payload.sub);
 
       if (!user) {
-        throw new UnauthorizedException('Authenticated user was not found');
+        throw new AppException({
+          message: 'Authenticated user was not found',
+          statusCode: HttpStatus.UNAUTHORIZED,
+          code: ERROR_CODE.AUTH_USER_NOT_FOUND,
+        });
       }
 
       request.user = {
@@ -40,8 +50,16 @@ export class JwtAuthGuard implements CanActivate {
       };
 
       return true;
-    } catch {
-      throw new UnauthorizedException('Invalid or expired authentication token');
+    } catch (error: unknown) {
+      if (error instanceof AppException) {
+        throw error;
+      }
+
+      throw new AppException({
+        message: 'Invalid or expired authentication token',
+        statusCode: HttpStatus.UNAUTHORIZED,
+        code: ERROR_CODE.AUTH_TOKEN_INVALID,
+      });
     }
   }
 

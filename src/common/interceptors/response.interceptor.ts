@@ -9,8 +9,6 @@ interface ApiSuccessResponse<T> {
   statusCode: number;
   message: string;
   data: T;
-  timestamp: string;
-  path: string;
 }
 
 @Injectable()
@@ -19,7 +17,6 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, ApiSuccessResp
 
   intercept(context: ExecutionContext, next: CallHandler<T>): Observable<ApiSuccessResponse<T>> {
     const httpContext = context.switchToHttp();
-    const request = httpContext.getRequest<{ url: string }>();
     const response = httpContext.getResponse<{ statusCode: number }>();
     const customMessage =
       this.reflector.getAllAndOverride<string>(RESPONSE_MESSAGE_METADATA, [
@@ -33,8 +30,6 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, ApiSuccessResp
         statusCode: response.statusCode,
         message: customMessage,
         data,
-        timestamp: new Date().toISOString(),
-        path: request.url,
       })),
     );
   }

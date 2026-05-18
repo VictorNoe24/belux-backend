@@ -27,8 +27,6 @@ describe('AppController (e2e)', () => {
           statusCode: 200,
           message: 'Application is running',
           data: 'Hello World!',
-          timestamp: expect.any(String),
-          path: '/',
         });
       });
   });
