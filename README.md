@@ -1,98 +1,217 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Belux Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Backend API de Belux construido con NestJS, TypeScript y Prisma ORM sobre PostgreSQL.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+El proyecto sigue una arquitectura modular orientada a escalabilidad, con validaciones por DTO, documentación con Swagger y una base de autenticación con JWT.
 
-## Description
+## Stack
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- NestJS
+- TypeScript
+- Prisma ORM v6
+- PostgreSQL
+- JWT Authentication
+- class-validator
+- class-transformer
+- Swagger
+- ESLint
+- Prettier
+- pnpm
 
-## Project setup
+## Caracteristicas actuales
 
-```bash
-$ pnpm install
+- Arquitectura modular por dominio
+- Integracion con Prisma para acceso a base de datos
+- Login con JWT
+- Respuestas estandarizadas para exito y error
+- Manejo centralizado de excepciones
+- Seed inicial para usuario administrador
+- Documentacion Swagger
+
+## Estructura principal
+
+```txt
+src/
+├── common/
+├── config/
+├── modules/
+├── prisma/
+├── shared/
+└── main.ts
 ```
 
-## Compile and run the project
+## Requisitos
+
+- Node.js 20 o superior
+- pnpm
+- PostgreSQL
+
+## Variables de entorno
+
+Este proyecto utiliza un archivo `.env`.
+
+Toma como base el archivo [.env.example](/Users/victornoeflorestoledo/development/projects/personal/belux-backend/.env.example).
+
+Puedes copiarlo con:
 
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+cp .env.example .env
 ```
 
-## Run tests
+Variables base incluidas:
+
+```env
+NODE_ENV=development
+PORT=3000
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/belux"
+JWT_SECRET="replace-with-a-secure-random-secret"
+JWT_EXPIRES_IN="15d"
+JWT_REFRESH_SECRET="replace-with-a-secure-random-refresh-secret"
+JWT_REFRESH_EXPIRES_IN="30d"
+BCRYPT_SALT_ROUNDS=10
+```
+
+## Instalacion
+
+1. Instala dependencias:
 
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+pnpm install
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+2. Crea tu archivo `.env` a partir de `.env.example`:
 
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+cp .env.example .env
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+3. Ajusta los valores reales de tu entorno en `.env`.
 
-## Resources
+4. Genera el cliente de Prisma:
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+pnpm exec prisma generate
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+5. Ejecuta migraciones:
 
-## Support
+```bash
+pnpm exec prisma migrate dev
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+6. Ejecuta el seed inicial:
 
-## Stay in touch
+```bash
+pnpm exec prisma db seed
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Usuario inicial del seed
 
-## License
+El seed crea:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- Email: `admin@belux.com`
+- Password: `123456`
+- Role: `SUPER_ADMIN`
+- Status: `ACTIVE`
+
+## Scripts disponibles
+
+```bash
+pnpm start
+pnpm start:dev
+pnpm start:debug
+pnpm start:prod
+pnpm build
+pnpm lint
+pnpm test
+pnpm test:e2e
+pnpm test:cov
+```
+
+## Ejecutar el proyecto
+
+Modo desarrollo:
+
+```bash
+pnpm start:dev
+```
+
+Build de produccion:
+
+```bash
+pnpm build
+pnpm start:prod
+```
+
+## Base de datos
+
+Comandos utiles de Prisma:
+
+```bash
+pnpm exec prisma generate
+pnpm exec prisma migrate dev
+pnpm exec prisma studio
+pnpm exec prisma db seed
+pnpm exec prisma validate
+```
+
+## Documentacion API
+
+Swagger esta disponible en:
+
+```txt
+http://localhost:3000/docs
+```
+
+Con prefijo global y versionado activo:
+
+```txt
+http://localhost:3000/api/v1
+```
+
+## Respuesta estandar
+
+Respuesta exitosa:
+
+```json
+{
+  "success": true,
+  "statusCode": 200,
+  "message": "Application is running",
+  "data": "Hello World!"
+}
+```
+
+Respuesta de error:
+
+```json
+{
+  "success": false,
+  "statusCode": 401,
+  "message": "Invalid credentials",
+  "error": {
+    "code": "AUTH_INVALID_CREDENTIALS",
+    "details": null,
+    "source": "application"
+  }
+}
+```
+
+## Calidad y validaciones
+
+El proyecto incluye:
+
+- ESLint para reglas de calidad
+- Prettier para formato
+- Validacion global con `ValidationPipe`
+- DTOs con `class-validator`
+
+## Notas
+
+- El proyecto usa Prisma 6.
+- En Prisma 6 el `schema.prisma` sigue usando `url = env("DATABASE_URL")`.
+- Si la extension de Prisma en VS Code marca eso como error, normalmente es un falso positivo relacionado con reglas de Prisma 7.
+
+## Licencia
+
+Proyecto privado de uso interno.
