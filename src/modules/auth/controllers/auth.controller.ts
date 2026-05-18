@@ -9,7 +9,10 @@ import { AuthenticatedUser } from '../interfaces/authenticated-user.interface';
 import { AuthService } from '../services/auth.service';
 
 @ApiTags('Auth')
-@Controller('auth')
+@Controller({
+  path: 'auth',
+  version: '1',
+})
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 

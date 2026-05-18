@@ -13,8 +13,8 @@ import { AuthService } from './services/auth.service';
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const jwtSecret = configService.get<string>('JWT_SECRET', 'dev-jwt-secret');
-        const jwtExpiresIn = configService.get<string>('JWT_EXPIRES_IN', '1d');
+        const jwtSecret = configService.getOrThrow<string>('JWT_SECRET');
+        const jwtExpiresIn = configService.getOrThrow<string>('JWT_EXPIRES_IN');
 
         return {
           secret: jwtSecret,
