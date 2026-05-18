@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
+
 import { AppModule } from './../src/app.module';
 
 describe('AppController (e2e)', () => {
@@ -20,7 +21,16 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer())
       .get('/')
       .expect(200)
-      .expect('Hello World!');
+      .expect(({ body }) => {
+        expect(body).toEqual({
+          success: true,
+          statusCode: 200,
+          message: 'Application is running',
+          data: 'Hello World!',
+          timestamp: expect.any(String),
+          path: '/',
+        });
+      });
   });
 
   afterEach(async () => {

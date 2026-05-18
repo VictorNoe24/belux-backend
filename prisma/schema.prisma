@@ -4,7 +4,80 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
+model User {
+  id        String        @id @default(uuid())
+  firstName String?
+  lastName  String?
+  email     String        @unique
+  password  String
+  statusId  String?
+  status    StatusGlobal? @relation(fields: [statusId], references: [id])
+  roles     UserRole[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  deletedAt DateTime?
 
+  @@map("users")
+}
+
+model StatusGlobal {
+  id          String   @id @default(uuid())
+  code        String   @unique
+  name        String
+  description String?
+  color       String?
+  module      String?
+  isActive    Boolean  @default(true)
+  users       User[]
+  createdAt   DateTime @default(now())
+
+  @@map("status_globals")
+}
+
+model Role {
+  id          String           @id @default(uuid())
+  code        String           @unique
+  name        String
+  description String?
+  permissions RolePermission[]
+  users       UserRole[]
+  createdAt   DateTime         @default(now())
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String           @id @default(uuid())
+  code        String           @unique
+  name        String
+  description String?
+  roles       RolePermission[]
+  createdAt   DateTime         @default(now())
+
+  @@map("permissions")
+}
+
+model UserRole {
+  userId     String
+  roleId     String
+  user       User     @relation(fields: [userId], references: [id])
+  role       Role     @relation(fields: [roleId], references: [id])
+  assignedAt DateTime @default(now())
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  role         Role       @relation(fields: [roleId], references: [id])
+  permission   Permission @relation(fields: [permissionId], references: [id])
+  assignedAt   DateTime   @default(now())
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
