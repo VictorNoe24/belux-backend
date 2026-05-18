@@ -50,13 +50,25 @@ src/
 
 Este proyecto utiliza un archivo `.env`.
 
-Variables recomendadas:
+Toma como base el archivo [.env.example](/Users/victornoeflorestoledo/development/projects/personal/belux-backend/.env.example).
+
+Puedes copiarlo con:
+
+```bash
+cp .env.example .env
+```
+
+Variables base incluidas:
 
 ```env
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/belux?schema=public"
+NODE_ENV=development
 PORT=3000
-JWT_SECRET="super-secret-key"
-JWT_EXPIRES_IN="1d"
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/belux"
+JWT_SECRET="replace-with-a-secure-random-secret"
+JWT_EXPIRES_IN="15d"
+JWT_REFRESH_SECRET="replace-with-a-secure-random-refresh-secret"
+JWT_REFRESH_EXPIRES_IN="30d"
+BCRYPT_SALT_ROUNDS=10
 ```
 
 ## Instalacion
@@ -67,21 +79,27 @@ JWT_EXPIRES_IN="1d"
 pnpm install
 ```
 
-2. Configura tu archivo `.env`.
+2. Crea tu archivo `.env` a partir de `.env.example`:
 
-3. Genera el cliente de Prisma:
+```bash
+cp .env.example .env
+```
+
+3. Ajusta los valores reales de tu entorno en `.env`.
+
+4. Genera el cliente de Prisma:
 
 ```bash
 pnpm exec prisma generate
 ```
 
-4. Ejecuta migraciones:
+5. Ejecuta migraciones:
 
 ```bash
 pnpm exec prisma migrate dev
 ```
 
-5. Ejecuta el seed inicial:
+6. Ejecuta el seed inicial:
 
 ```bash
 pnpm exec prisma db seed
@@ -145,10 +163,10 @@ Swagger esta disponible en:
 http://localhost:3000/docs
 ```
 
-Con prefijo global activo:
+Con prefijo global y versionado activo:
 
 ```txt
-http://localhost:3000/api
+http://localhost:3000/api/v1
 ```
 
 ## Respuesta estandar
